@@ -12,7 +12,7 @@ public class Vehicle {
     public int mileage;
     public String carId;
     public String owner;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idCarBrand", referencedColumnName = "brandId")
     public CarBrand idCarBrand;
     public String carBrand;
@@ -34,7 +34,11 @@ public class Vehicle {
     }
 
     public String getCarBrand() {
-        return idCarBrand.getCarBrandName();
+        if (idCarBrand != null) {
+            return idCarBrand.getCarBrandName();
+        } else {
+            return "";
+        }
     }
 
     public void setCarBrand(String carBrand) {

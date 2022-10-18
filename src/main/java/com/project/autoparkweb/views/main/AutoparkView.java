@@ -22,7 +22,7 @@ public class AutoparkView extends VerticalLayout {
     private final VehicleEditor vehicleEditor;
 
     private Grid<Vehicle> vehicleGrid = new Grid<>(Vehicle.class);
-//    private Grid<CarBrand> brandGrid = new Grid<>(CarBrand.class);
+    private Grid<CarBrand> brandGrid = new Grid<>(CarBrand.class);
 
     private final TextField filter = new TextField("","Type to filter");
     private final Button addNewButton = new Button("New vehicle", VaadinIcon.PLUS.create());
@@ -51,9 +51,9 @@ public class AutoparkView extends VerticalLayout {
 
         showVehicles( "");
 
-//        add("ALL BRANDS WE HAVE");
-//        add(brandGrid);
-//        brandGrid.setItems(vehicleService.getAllBrands());
+        add("ALL BRANDS WE HAVE");
+        add(brandGrid);
+        brandGrid.setItems(vehicleService.getAllBrands());
     }
 
     private void showVehicles(String name) {

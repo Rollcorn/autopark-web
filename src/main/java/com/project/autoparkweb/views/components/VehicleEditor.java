@@ -22,7 +22,7 @@ public class VehicleEditor extends VerticalLayout implements KeyNotifier  {
 
     private Vehicle vehicle;
 
-    private TextField carBrand = new TextField("Car brand");
+    private TextField idCarBrand = new TextField("Car brand");
     private TextField carId = new TextField("Car ID");
     private TextField mileage = new TextField("Mileage");
     private TextField owner = new TextField("owner");
@@ -45,7 +45,7 @@ public class VehicleEditor extends VerticalLayout implements KeyNotifier  {
     @Autowired
     public VehicleEditor(VehicleRepository vehicleRepository) {
         this.vehicleRepository = vehicleRepository;
-        add(carBrand, carId, mileage, owner, price, releaseDate, actions);
+        add(idCarBrand, carId, mileage, owner, price, releaseDate, actions);
 
         binder.bindInstanceFields(this);
         setSpacing(true);

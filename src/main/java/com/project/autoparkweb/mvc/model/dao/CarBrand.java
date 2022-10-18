@@ -1,34 +1,38 @@
 package com.project.autoparkweb.mvc.model.dao;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class CarBrand {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int brandId;
+    Long brandId;
     String carBrandName;
     String bodyType;
     int loadCapacity;
     String fuelType;
     String transmissionType;
     String drivetrainType;
-    @OneToOne(mappedBy = "idCarBrand")
-    private Vehicle vehicle;
-
+    @OneToMany(mappedBy = "idCarBrand")
+    private List<Vehicle> vehicle;
 
     public CarBrand() {
     }
 
+    public CarBrand(List<Vehicle> vehicle) {
+        this.vehicle = vehicle;
+    }
 
     public CarBrand(String carBrandName, String bodyType, int loadCapacity, String fuelType, String transmissionType,
-                    String drivetrainType) {
+                    String drivetrainType, List<Vehicle> vehicle) {
         this.carBrandName = carBrandName;
         this.bodyType = bodyType;
         this.loadCapacity = loadCapacity;
         this.fuelType = fuelType;
         this.transmissionType = transmissionType;
         this.drivetrainType = drivetrainType;
+        this.vehicle = vehicle;
     }
 
     public String getCarBrandName() {
