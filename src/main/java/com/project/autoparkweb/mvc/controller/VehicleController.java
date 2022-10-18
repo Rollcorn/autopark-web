@@ -1,6 +1,6 @@
 package com.project.autoparkweb.mvc.controller;
 
-import com.project.autoparkweb.mvc.VehicleService;
+import com.project.autoparkweb.mvc.model.services.VehicleService;
 import com.project.autoparkweb.mvc.model.dao.Vehicle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

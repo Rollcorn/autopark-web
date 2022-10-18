@@ -9,4 +9,7 @@ import java.util.List;
 public interface CarBrandRepository extends JpaRepository<CarBrand, Long> {
     @Override
     List<CarBrand> findAll();
+
+    @Override
+    <S extends CarBrand> S save(S entity);
 }

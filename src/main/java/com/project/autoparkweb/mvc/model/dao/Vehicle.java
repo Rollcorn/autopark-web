@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public int vehicleId;
+    public Long vehicleId;
     public int price;
     public String releaseDate;
     public int mileage;
@@ -29,7 +29,9 @@ public class Vehicle {
         this.owner = owner;
     }
 
-
+    public Long getVehicleId() {
+        return vehicleId;
+    }
 
     public String getCarBrand() {
         return idCarBrand.getCarBrandName();

@@ -1,4 +1,4 @@
-package com.project.autoparkweb.mvc;
+package com.project.autoparkweb.mvc.model.services;
 
 import com.project.autoparkweb.mvc.model.dao.CarBrand;
 import com.project.autoparkweb.mvc.model.dao.Vehicle;
@@ -24,6 +24,10 @@ public class VehicleService {
         List<CarBrand> car = carBrandRepository.findAll();
 //        BrandProperty brandProperty = mapper.getBrandPrperty(car.get(0))
         return car;
+    }
+
+    public List<Vehicle> getVehicleByName(String name) {
+        return vehicleRepository.findByName(name);
     }
 
 }
