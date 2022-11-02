@@ -1,10 +1,11 @@
 package com.project.autoparkweb.mvc.model.dao;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-public class CarBrand {
+public class CarBrand implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long brandId;
@@ -25,14 +26,17 @@ public class CarBrand {
     }
 
     public CarBrand(String carBrandName, String bodyType, int loadCapacity, String fuelType, String transmissionType,
-                    String drivetrainType, List<Vehicle> vehicle) {
+                    String drivetrainType) {
         this.carBrandName = carBrandName;
         this.bodyType = bodyType;
         this.loadCapacity = loadCapacity;
         this.fuelType = fuelType;
         this.transmissionType = transmissionType;
         this.drivetrainType = drivetrainType;
-        this.vehicle = vehicle;
+    }
+
+    public Long getBrandId() {
+        return brandId;
     }
 
     public String getCarBrandName() {
@@ -81,5 +85,10 @@ public class CarBrand {
 
     public void setDrivetrainType(String drivetrainType) {
         this.drivetrainType = drivetrainType;
+    }
+
+    @Override
+    public String toString() {
+        return  carBrandName;
     }
 }

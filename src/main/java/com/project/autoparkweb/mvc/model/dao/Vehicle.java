@@ -15,34 +15,21 @@ public class Vehicle {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idCarBrand", referencedColumnName = "brandId")
     public CarBrand idCarBrand;
-    public String carBrand;
 
     public Vehicle() {
     }
 
-
-    public Vehicle(int price, String releaseDate, int mileage, String carId, String owner) {
+    public Vehicle(int price, String releaseDate, int mileage, String carId, String owner, CarBrand carBrand) {
         this.price = price;
         this.releaseDate = releaseDate;
         this.mileage = mileage;
         this.carId = carId;
         this.owner = owner;
+        this.idCarBrand = carBrand;
     }
 
     public Long getVehicleId() {
         return vehicleId;
-    }
-
-    public String getCarBrand() {
-        if (idCarBrand != null) {
-            return idCarBrand.getCarBrandName();
-        } else {
-            return "";
-        }
-    }
-
-    public void setCarBrand(String carBrand) {
-        this.carBrand = carBrand;
     }
 
     public String getCarId() {
@@ -85,8 +72,15 @@ public class Vehicle {
         this.mileage = mileage;
     }
 
+    public CarBrand getIdCarBrand() {
+        return idCarBrand;
+    }
+
+    public void setVehicleId(Long vehicleId) {
+        this.vehicleId = vehicleId;
+    }
+
     public void setIdCarBrand(CarBrand idCarBrand) {
         this.idCarBrand = idCarBrand;
-        setCarBrand(idCarBrand.carBrandName);
     }
 }

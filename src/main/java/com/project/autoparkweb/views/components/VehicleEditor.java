@@ -1,10 +1,13 @@
 package com.project.autoparkweb.views.components;
 
+import com.project.autoparkweb.mvc.model.dao.CarBrand;
 import com.project.autoparkweb.mvc.model.dao.Vehicle;
+import com.project.autoparkweb.mvc.model.repository.CarBrandRepository;
 import com.project.autoparkweb.mvc.model.repository.VehicleRepository;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -15,14 +18,19 @@ import com.vaadin.flow.spring.annotation.UIScope;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @SpringComponent
 @UIScope
 public class VehicleEditor extends VerticalLayout implements KeyNotifier  {
     private final VehicleRepository vehicleRepository;
+    private final CarBrandRepository carBrandRepository;
 
     private Vehicle vehicle;
+    private ComboBox<CarBrand> idCarBrand = new ComboBox("Car brand");
 
-    private TextField idCarBrand = new TextField("Car brand");
     private TextField carId = new TextField("Car ID");
     private TextField mileage = new TextField("Mileage");
     private TextField owner = new TextField("owner");
@@ -43,8 +51,16 @@ public class VehicleEditor extends VerticalLayout implements KeyNotifier  {
     }
 
     @Autowired
-    public VehicleEditor(VehicleRepository vehicleRepository) {
+    public VehicleEditor(VehicleRepository vehicleRepository, CarBrandRepository carBrandRepository) {
         this.vehicleRepository = vehicleRepository;
+        this.carBrandRepository = carBrandRepository;
+
+        List<CarBrand> carsBrands = carBrandRepository.findAll();
+        Map<Long, CarBrand> carBrandMap = new HashMap<>();
+        carsBrands.forEach(carBrand -> carBrandMap.put(carBrand.getBrandId(), carBrand));
+//        idCarBrand.setItems(carsBrands.stream().map(CarBrand::getCarBrandName).collect(Collectors.toList()));
+        idCarBrand.setItems(carsBrands);
+
         add(idCarBrand, carId, mileage, owner, price, releaseDate, actions);
 
         binder.bindInstanceFields(this);
@@ -82,6 +98,10 @@ public class VehicleEditor extends VerticalLayout implements KeyNotifier  {
     }
 
     private void save() {
+//        Vehicle newVehicle = new Vehicle();
+        if (vehicle.idCarBrand == null) {
+            vehicle.setIdCarBrand(idCarBrand.getValue());
+        }
         vehicleRepository.save(vehicle);
         changeHandler.onChange();
     }

@@ -2,6 +2,7 @@ package com.project.autoparkweb.views.main;
 
 import com.project.autoparkweb.mvc.model.dao.CarBrand;
 import com.project.autoparkweb.mvc.model.dao.Vehicle;
+import com.project.autoparkweb.mvc.model.pojo.VehiclePojo;
 import com.project.autoparkweb.mvc.model.services.VehicleService;
 import com.project.autoparkweb.views.components.VehicleEditor;
 import com.vaadin.flow.component.button.Button;
