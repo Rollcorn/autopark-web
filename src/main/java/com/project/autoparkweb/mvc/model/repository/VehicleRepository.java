@@ -12,6 +12,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     @Override
     List<Vehicle> findAll();
 
-    @Query("from Vehicle e left join fetch e.idCarBrand where e.idCarBrand.carBrandName like concat( '%', :name, '%')")
+    @Query("from Vehicle e left join fetch e.carBrandId where e.carBrandId.carBrandName like concat( '%', :name, '%')")
     List<Vehicle> findByName(@Param("name") String name);
 }

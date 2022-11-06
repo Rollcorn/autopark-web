@@ -57,7 +57,7 @@ public class VehicleEditor extends VerticalLayout implements KeyNotifier  {
 
         List<CarBrand> carsBrands = carBrandRepository.findAll();
         Map<Long, CarBrand> carBrandMap = new HashMap<>();
-        carsBrands.forEach(carBrand -> carBrandMap.put(carBrand.getBrandId(), carBrand));
+        carsBrands.forEach(carBrand -> carBrandMap.put(carBrand.getId(), carBrand));
 //        idCarBrand.setItems(carsBrands.stream().map(CarBrand::getCarBrandName).collect(Collectors.toList()));
         idCarBrand.setItems(carsBrands);
 
@@ -82,8 +82,8 @@ public class VehicleEditor extends VerticalLayout implements KeyNotifier  {
             setVisible(false);
             return;
         }
-        if (vehicle.getVehicleId() != null) {
-            this.vehicle = vehicleRepository.findById(vehicle.vehicleId).orElse(vehicle);
+        if (vehicle.getId() != null) {
+            this.vehicle = vehicleRepository.findById(vehicle.id).orElse(vehicle);
         } else {
             this.vehicle = vehicle;
         }
@@ -99,8 +99,8 @@ public class VehicleEditor extends VerticalLayout implements KeyNotifier  {
 
     private void save() {
 //        Vehicle newVehicle = new Vehicle();
-        if (vehicle.idCarBrand == null) {
-            vehicle.setIdCarBrand(idCarBrand.getValue());
+        if (vehicle.carBrandId == null) {
+            vehicle.setCarBrandId(idCarBrand.getValue());
         }
         vehicleRepository.save(vehicle);
         changeHandler.onChange();

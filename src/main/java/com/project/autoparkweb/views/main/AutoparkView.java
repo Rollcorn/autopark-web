@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AutoparkView extends VerticalLayout {
     private final VehicleService vehicleService;
     private final VehicleEditor vehicleEditor;
-
     private Grid<Vehicle> vehicleGrid = new Grid<>(Vehicle.class);
     private Grid<CarBrand> brandGrid = new Grid<>(CarBrand.class);
 

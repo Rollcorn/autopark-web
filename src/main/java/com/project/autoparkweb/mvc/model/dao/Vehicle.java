@@ -1,35 +1,45 @@
 package com.project.autoparkweb.mvc.model.dao;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long vehicleId;
+    public Long id;
     public int price;
-    public String releaseDate;
     public int mileage;
+    public String releaseDate;
     public String carId;
     public String owner;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idCarBrand", referencedColumnName = "brandId")
-    public CarBrand idCarBrand;
-
+    @JoinColumn(name = "carBrandId", referencedColumnName = "id")
+    public CarBrand carBrandId;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "organizationId", referencedColumnName = "id")
+    private Organization organizationId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "driverId", referencedColumnName = "id")
+    private Driver driverId;
+    @OneToMany(targetEntity = Driver.class, cascade = CascadeType.ALL, mappedBy = "vehicleId", fetch=FetchType.EAGER)
+    private List<Driver> drivers;
     public Vehicle() {
     }
 
-    public Vehicle(int price, String releaseDate, int mileage, String carId, String owner, CarBrand carBrand) {
+    public Vehicle(int price, String releaseDate, int mileage, String carId, String owner, CarBrand carBrand,
+                   Organization organizationId) {
         this.price = price;
         this.releaseDate = releaseDate;
         this.mileage = mileage;
         this.carId = carId;
         this.owner = owner;
-        this.idCarBrand = carBrand;
+        this.carBrandId = carBrand;
+        this.organizationId = organizationId;
     }
 
-    public Long getVehicleId() {
-        return vehicleId;
+    public Long getId() {
+        return id;
     }
 
     public String getCarId() {
@@ -72,15 +82,39 @@ public class Vehicle {
         this.mileage = mileage;
     }
 
-    public CarBrand getIdCarBrand() {
-        return idCarBrand;
+    public Organization getOrganizationId() {
+        return organizationId;
     }
 
-    public void setVehicleId(Long vehicleId) {
-        this.vehicleId = vehicleId;
+    public void setOrganizationId(Organization organizationId) {
+        this.organizationId = organizationId;
     }
 
-    public void setIdCarBrand(CarBrand idCarBrand) {
-        this.idCarBrand = idCarBrand;
+    public CarBrand getCarBrandId() {
+        return carBrandId;
+    }
+
+    public void setId(Long vehicleId) {
+        this.id = vehicleId;
+    }
+
+    public void setCarBrandId(CarBrand carBrandId) {
+        this.carBrandId = carBrandId;
+    }
+
+    public Driver getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(Driver driverId) {
+        this.driverId = driverId;
+    }
+
+    public List<Driver> getDrivers() {
+        return drivers;
+    }
+
+    public void setDrivers(List<Driver> drivers) {
+        this.drivers = drivers;
     }
 }

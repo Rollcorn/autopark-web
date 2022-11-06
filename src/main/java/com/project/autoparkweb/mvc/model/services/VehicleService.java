@@ -28,7 +28,7 @@ public class VehicleService {
         for (Vehicle vehicle : vehicles) {
             VehiclePojo vehiclePojo = new VehiclePojo();
             vehiclePojo.carId = vehicle.carId;
-            vehiclePojo.idCarBrand = vehicle.getIdCarBrand();
+            vehiclePojo.idCarBrand = vehicle.getCarBrandId();
             vehiclePojo.mileage = vehicle.mileage;
             vehiclePojo.owner = vehicle.owner;
             vehiclePojo.price = vehicle.price;

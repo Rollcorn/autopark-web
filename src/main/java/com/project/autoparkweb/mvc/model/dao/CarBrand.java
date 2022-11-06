@@ -8,21 +8,17 @@ import java.util.List;
 public class CarBrand implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long brandId;
+    Long id;
     String carBrandName;
     String bodyType;
     int loadCapacity;
     String fuelType;
     String transmissionType;
     String drivetrainType;
-    @OneToMany(mappedBy = "idCarBrand")
+    @OneToMany(targetEntity = Vehicle.class, cascade = CascadeType.ALL, mappedBy = "carBrandId", fetch=FetchType.EAGER)
     private List<Vehicle> vehicle;
 
     public CarBrand() {
-    }
-
-    public CarBrand(List<Vehicle> vehicle) {
-        this.vehicle = vehicle;
     }
 
     public CarBrand(String carBrandName, String bodyType, int loadCapacity, String fuelType, String transmissionType,
@@ -35,8 +31,8 @@ public class CarBrand implements Serializable {
         this.drivetrainType = drivetrainType;
     }
 
-    public Long getBrandId() {
-        return brandId;
+    public Long getId() {
+        return id;
     }
 
     public String getCarBrandName() {
