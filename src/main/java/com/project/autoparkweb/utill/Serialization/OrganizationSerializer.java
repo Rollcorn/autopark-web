@@ -1,4 +1,4 @@
-package com.project.autoparkweb.utill;
+package com.project.autoparkweb.utill.Serialization;
 
 import com.google.gson.*;
 import com.project.autoparkweb.mvc.model.dao.Driver;

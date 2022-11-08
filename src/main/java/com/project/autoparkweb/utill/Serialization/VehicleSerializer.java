@@ -1,4 +1,4 @@
-package com.project.autoparkweb.utill;
+package com.project.autoparkweb.utill.Serialization;
 
 //import com.fasterxml.jackson.databind.JsonSerializer;
 
