@@ -1,5 +1,7 @@
 package com.project.autoparkweb.utill.Security;
 
+import com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,7 +15,7 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @EnableWebSecurity
 @Configuration
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends VaadinWebSecurityConfigurerAdapter {
 	private static final String LOGIN_PROC_URL = "/login";
 	private static final String LOGIN_FAILURE_URL = "/login?error";
 	private static final String LOGIN_URL = "/login";
@@ -31,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		    // Restrict access to our application
 		    .and().authorizeRequests()
 		    // Allow all vaadin internal requests
-		    .requestMatchers(SecurityUtils::isFrameworkInternakRequest).permitAll()
+		    .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
 		    // Allow all requests by logged in users
 		    .anyRequest().authenticated()
 		    // Configure the login page
@@ -46,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public UserDetailsService userDetailsService() {
 		UserDetails user = User.withUsername("user")
-		                       .password("{noop}1111")
+		                       .password("{noop}12345678")
 		                       .roles("USER")
 		                       .build();
 		UserDetails user2 = User.withUsername("Rollcorn")
@@ -59,6 +61,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				    .build();
 		return new InMemoryUserDetailsManager(user, user2, user3);
 	}
+	
+	
 	
 	@Override
 	public void configure(WebSecurity web) {

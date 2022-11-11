@@ -13,7 +13,6 @@ import java.util.Collections;
 
 @Route("login")
 @PageTitle("Login")
-@AnonymousAllowed
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 	// TODO Might be replaced by custom login form
 	private LoginForm loginForm = new LoginForm();

@@ -2,6 +2,8 @@ DROP table IF EXISTS driver CASCADE;
 DROP table IF EXISTS vehicle CASCADE;
 DROP table IF EXISTS car_brand CASCADE;
 DROP table IF EXISTS organization CASCADE;
+DROP table IF EXISTS "user" CASCADE;
+DROP table IF EXISTS manager CASCADE;
 
 CREATE TABLE vehicle
 (
@@ -73,5 +75,25 @@ VALUES (1, 'Jason Statham', 3300, '12.04.1986', 1, 1);
 insert into driver (id, name, salary, birthday, vehicle_id, organization_id)
 VALUES (2, 'Val Erasza Voda', 2300, '12.04.19991', 2, 2);
 
+CREATE TABLE "user"
+(
+    id                  int NOT NULL PRIMARY KEY,
+    login               varchar(150),
+    password            varchar(150)
+);
 
+CREATE TABLE "manager"
+(
+    id                  int NOT NULL PRIMARY KEY,
+    login               varchar(150),
+    password            varchar(150)
+);
 
+INSERT INTO "user" (id, login, password)
+VALUES (0, 'maria', '1221');
+
+INSERT INTO "user" (id, login, password)
+VALUES (1, 'alex', '1221');
+
+INSERT INTO "manager" (id, login, password)
+VALUES (0, 'rollcorn', '1221');

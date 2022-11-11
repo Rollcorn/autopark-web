@@ -1,9 +1,6 @@
 package com.project.autoparkweb;
 
 import com.vaadin.flow.component.dependency.NpmPackage;
-import com.vaadin.flow.component.page.AppShellConfigurator;
-import com.vaadin.flow.server.PWA;
-import com.vaadin.flow.theme.Theme;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
@@ -16,9 +13,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  * and some desktop browsers.
  */
 @SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
-//@Theme(value = "mytodo")
-//@PWA(name = "My Todo", shortName = "My Todo", offlineResources = {})
-//@NpmPackage(value = "line-awesome", version = "1.3.0")
+@NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
 public class Application extends SpringBootServletInitializer {
 	
 	public static void main(String[] args) {

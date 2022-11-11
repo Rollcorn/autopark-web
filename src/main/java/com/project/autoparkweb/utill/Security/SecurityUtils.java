@@ -19,7 +19,7 @@ public class SecurityUtils {
      * @param request
      * @return
      */
-    static boolean isFrameworkInternakRequest(HttpServletRequest request) {
+    static boolean isFrameworkInternalRequest(HttpServletRequest request) {
         final String parameterValue = request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER);
         return parameterValue != null && Stream.of(HandlerHelper.RequestType.values())
                 .anyMatch(requestType -> requestType.getIdentifier().equals(parameterValue));
