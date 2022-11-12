@@ -4,7 +4,8 @@ import com.project.autoparkweb.mvc.model.dao.CarBrand;
 import com.project.autoparkweb.mvc.model.dao.Vehicle;
 import com.project.autoparkweb.mvc.model.pojo.VehiclePojo;
 import com.project.autoparkweb.mvc.model.services.VehicleService;
-import com.project.autoparkweb.views.MainLayout;
+//import com.project.autoparkweb.views.MainLayout;
+import com.project.autoparkweb.views.MainView;
 import com.project.autoparkweb.views.components.VehicleEditor;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -23,8 +24,8 @@ import javax.annotation.security.RolesAllowed;
 
 
 @PageTitle("Autopark")
-@RolesAllowed("ADMIN")
-@Route(value = "autopark", layout = MainLayout.class)
+@RolesAllowed("USER")
+@Route(value = "", layout = MainView.class)
 public class AutoparkView extends VerticalLayout {
     private final VehicleService vehicleService;
     private final VehicleEditor vehicleEditor;

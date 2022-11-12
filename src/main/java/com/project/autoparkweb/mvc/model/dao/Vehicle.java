@@ -117,4 +117,20 @@ public class Vehicle {
     public void setDrivers(List<Driver> drivers) {
         this.drivers = drivers;
     }
+    
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                       "id=" + id +
+                       ", price=" + price +
+                       ", mileage=" + mileage +
+                       ", releaseDate='" + releaseDate + '\'' +
+                       ", carId='" + carId + '\'' +
+                       ", owner='" + owner + '\'' +
+                       ", carBrandId=" + carBrandId +
+                       ", organizationId=" + organizationId +
+                       ", driverId=" + driverId +
+                       ", drivers=" + drivers +
+                       '}';
+    }
 }

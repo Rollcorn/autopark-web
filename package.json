@@ -117,7 +117,8 @@
     "@vaadin/virtual-list": "23.1.6",
     "construct-style-sheets-polyfill": "3.1.0",
     "date-fns": "2.28.0",
-    "lit": "2.2.6"
+    "lit": "2.2.6",
+    "lumo-css-framework": "^4.0.10"
   },
   "devDependencies": {
     "async": "3.2.2",
@@ -258,7 +259,8 @@
     "lit": "$lit",
     "@polymer/polymer": "$@polymer/polymer",
     "chokidar": "$chokidar",
-    "date-fns": "$date-fns"
+    "date-fns": "$date-fns",
+    "lumo-css-framework": "$lumo-css-framework"
   },
   "vaadin": {
     "dependencies": {
@@ -376,7 +378,8 @@
       "@vaadin/virtual-list": "23.1.6",
       "construct-style-sheets-polyfill": "3.1.0",
       "date-fns": "2.28.0",
-      "lit": "2.2.3"
+      "lit": "2.2.3",
+      "lumo-css-framework": "^4.0.10"
     },
     "devDependencies": {
       "async": "3.2.2",
@@ -401,6 +404,6 @@
       "workbox-precaching": "6.5.0",
       "workbox-webpack-plugin": "6.5.0"
     },
-    "hash": "36bc7f5fd8cab7cf957600abf35fce87276bad1c58ddda1f1f8db2c0f0ac220e"
+    "hash": "72c57d208d3a41036d0d335c527fb9f2758115bb86f24bb4e42900103aa456a9"
   }
 }

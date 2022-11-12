@@ -2,34 +2,42 @@ package com.project.autoparkweb.mvc.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.project.autoparkweb.mvc.model.dao.Driver;
-import com.project.autoparkweb.mvc.model.dao.Organization;
-import com.project.autoparkweb.mvc.model.dao.Vehicle;
-import com.project.autoparkweb.mvc.model.repository.DriverRepository;
-import com.project.autoparkweb.mvc.model.repository.OrganizationRepository;
+import com.project.autoparkweb.mvc.model.dao.*;
+import com.project.autoparkweb.mvc.model.repository.*;
 import com.project.autoparkweb.mvc.model.services.VehicleService;
-import com.project.autoparkweb.utill.Serialization.DriverSerializer;
-import com.project.autoparkweb.utill.Serialization.OrganizationSerializer;
-import com.project.autoparkweb.utill.Serialization.VehicleSerializer;
+import com.project.autoparkweb.utill.Serialization.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/autopark/rest")
 public class VehicleController {
+    private final VehicleService vehicleService;
+    private final OrganizationRepository organizationRepository;
+    private final DriverRepository driverRepository;
+    private final ManagerRepository managerRepository;
+    private final ManagerOrganizationAccessRepository managerOrganizationAccessRepository;
+    private final UserRepository userRepository;
     @Autowired
-    private VehicleService vehicleService;
-    @Autowired
-    private OrganizationRepository organizationRepository;
-    @Autowired
-    private DriverRepository driverRepository;
-
+    public VehicleController( VehicleService vehicleService,
+                              OrganizationRepository organizationRepository,
+                              DriverRepository driverRepository,
+                              ManagerRepository managerRepository,
+                              ManagerOrganizationAccessRepository managerOrganizationAccessRepository,
+                              UserRepository userRepository) {
+        this.vehicleService = vehicleService;
+        this.organizationRepository = organizationRepository;
+        this.driverRepository = driverRepository;
+        this.managerRepository = managerRepository;
+        this.managerOrganizationAccessRepository = managerOrganizationAccessRepository;
+        this.userRepository = userRepository;
+    }
+    
     @GetMapping(value = "/vehicles")
     public ResponseEntity<String> getVehicles() {
         try {
@@ -67,6 +75,45 @@ public class VehicleController {
                     .registerTypeAdapter(Organization.class, new OrganizationSerializer())
                     .create();
             return new ResponseEntity<>(gson.toJson(unit), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    @GetMapping(value = "/managers")
+    public ResponseEntity<String> getManagers() {
+        try {
+            List<Manager> unit = managerRepository.findAll();
+            Gson gson = new GsonBuilder()
+                                .setPrettyPrinting()
+                                .registerTypeAdapter(Manager.class, new ManagerSerializer())
+                                .create();
+            return new ResponseEntity<>(gson.toJson(unit), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    @GetMapping(value = "/managersorganization")
+    public ResponseEntity<String> getManagersOrganization() {
+        try {
+            List<ManagerOrganizationAccess> unit = managerOrganizationAccessRepository.findAll();
+            Gson gson = new GsonBuilder()
+                                .setPrettyPrinting()
+                                .registerTypeAdapter(ManagerOrganizationAccess.class, new ManagerOrganizationAccessSerializer())
+                                .create();
+            return new ResponseEntity<>(gson.toJson(unit), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    @GetMapping(value = "/user/{name}")
+    public ResponseEntity<String> getManagersOrganization(@PathVariable(name = "name") String name) {
+        try {
+            User unit = userRepository.findByName(name);
+
+            return new ResponseEntity<>(unit.toString(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

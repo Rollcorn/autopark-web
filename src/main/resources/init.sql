@@ -4,18 +4,20 @@ DROP table IF EXISTS car_brand CASCADE;
 DROP table IF EXISTS organization CASCADE;
 DROP table IF EXISTS "user" CASCADE;
 DROP table IF EXISTS manager CASCADE;
+DROP table IF EXISTS manager_organization_access CASCADE;
+DROP table IF EXISTS "role" CASCADE;
 
 CREATE TABLE vehicle
 (
-    id                  int NOT NULL PRIMARY KEY,
-    car_id              varchar(150),
-    price               varchar(150) NOT NULL,
-    release_date        varchar(150),
-    mileage             int,
-    owner               varchar(200),
-    driver_id           int,
-    car_brand_id        int,
-    organization_id     int
+    id              int          NOT NULL PRIMARY KEY,
+    car_id          varchar(150),
+    price           varchar(150) NOT NULL,
+    release_date    varchar(150),
+    mileage         int,
+    "owner"           varchar(200),
+    driver_id       int,
+    car_brand_id    int,
+    organization_id int
 );
 
 insert INTO vehicle (id, car_id, car_brand_id, price, release_date, mileage, owner, driver_id, organization_id)
@@ -27,13 +29,13 @@ VALUES (2, 'E111ACX', 2, 150000, '07.08.2003', 180000, 'JHON', 2, 2);
 
 CREATE TABLE car_brand
 (
-    id                  int NOT NULL PRIMARY KEY,
-    car_brand_name      varchar(150),
-    body_type           varchar(150),
-    load_capacity       int,
-    fuel_type           varchar(150),
-    transmission_type   varchar(150),
-    drivetrain_type     varchar(150)
+    id                int NOT NULL PRIMARY KEY,
+    car_brand_name    varchar(150),
+    body_type         varchar(150),
+    load_capacity     int,
+    fuel_type         varchar(150),
+    transmission_type varchar(150),
+    drivetrain_type   varchar(150)
 
 );
 
@@ -46,54 +48,82 @@ VALUES (2, 'Honda Accord', 'coupes', 494, 'Regular unleaded', '5-speed manual', 
 
 CREATE TABLE organization
 (
-    id                  int NOT NULL PRIMARY KEY,
-    name                varchar(150),
-    city                varchar(150)
+    id   int NOT NULL PRIMARY KEY,
+    "name" varchar(150),
+    city varchar(150)
 );
 
 CREATE TABLE driver
 (
-    id                  int NOT NULL PRIMARY KEY,
-    name                varchar(150),
-    salary              varchar(150) NOT NULL,
-    birthday            varchar(150),
-    vehicle_id          int,
-    organization_id     int
+    id              int          NOT NULL PRIMARY KEY,
+    "name"            varchar(150),
+    salary          varchar(150) NOT NULL,
+    birthday        varchar(150),
+    vehicle_id      int,
+    organization_id int
 );
 
-insert into organization (id, name, city)
+insert into organization (id, "name", city)
 VALUES (0, 'ORACLE', 'New York');
-insert into organization (id, name, city)
+insert into organization (id, "name", city)
 VALUES (1, 'META', 'Los Angeles');
-insert into organization (id, name, city)
+insert into organization (id, "name", city)
 VALUES (2, 'Alphabet', 'Los Angeles');
 
-insert into driver (id, name, salary, birthday, vehicle_id, organization_id)
+insert into driver (id, "name", salary, birthday, vehicle_id, organization_id)
 VALUES (0, 'Sam Smith', 1300, '12.04.1990', 0, 0);
-insert into driver (id, name, salary, birthday, vehicle_id, organization_id)
+insert into driver (id, "name", salary, birthday, vehicle_id, organization_id)
 VALUES (1, 'Jason Statham', 3300, '12.04.1986', 1, 1);
-insert into driver (id, name, salary, birthday, vehicle_id, organization_id)
+insert into driver (id, "name", salary, birthday, vehicle_id, organization_id)
 VALUES (2, 'Val Erasza Voda', 2300, '12.04.19991', 2, 2);
 
 CREATE TABLE "user"
 (
-    id                  int NOT NULL PRIMARY KEY,
-    login               varchar(150),
-    password            varchar(150)
+    id       int NOT NULL PRIMARY KEY,
+    username varchar(150),
+    "password" varchar(150),
+    role_id  int
 );
 
-CREATE TABLE "manager"
+CREATE TABLE manager
 (
-    id                  int NOT NULL PRIMARY KEY,
-    login               varchar(150),
-    password            varchar(150)
+    id       int NOT NULL PRIMARY KEY,
+    username varchar(150),
+    "password" varchar(150),
+    role_id  int
 );
 
-INSERT INTO "user" (id, login, password)
-VALUES (0, 'maria', '1221');
+CREATE TABLE "role"
+(
+    id        int NOT NULL PRIMARY KEY,
+    role_name varchar(150)
+);
 
-INSERT INTO "user" (id, login, password)
-VALUES (1, 'alex', '1221');
+INSERT INTO "role" (id, role_name)
+VALUES (0, 'USER');
+INSERT INTO "role" (id, role_name)
+VALUES (1, 'ADMIN');
 
-INSERT INTO "manager" (id, login, password)
-VALUES (0, 'rollcorn', '1221');
+INSERT INTO "user" (id, username, "password", role_id)
+VALUES (0, 'maria', '1221', 0);
+INSERT INTO "user" (id, username, "password", role_id)
+VALUES (1, 'alex', '1221', 0);
+INSERT INTO "manager" (id, username, "password", role_id)
+VALUES (0, 'rollcorn', '2012', 0);
+INSERT INTO "manager" (id, username, "password", role_id)
+VALUES (1, 'boris', '2012', 0);
+
+CREATE TABLE manager_organization_access
+
+(
+    id              int NOT NULL PRIMARY KEY,
+    manager_id      int,
+    organization_id int
+);
+
+INSERT INTO manager_organization_access (id, manager_id, organization_id)
+VALUES (0, 0, 0);
+INSERT INTO manager_organization_access (id, manager_id, organization_id)
+VALUES (1, 0, 1);
+INSERT INTO manager_organization_access (id, manager_id, organization_id)
+VALUES (2, 1, 2);
