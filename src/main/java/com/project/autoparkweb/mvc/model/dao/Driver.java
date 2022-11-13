@@ -11,10 +11,10 @@ public class Driver {
     public String name;
     public String salary;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "organizationId", referencedColumnName = "id")
+    @JoinColumn(name = "organization_id", referencedColumnName = "id")
     public Organization organizationId;
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "vehicleId", referencedColumnName = "id")
+    @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
     public Vehicle vehicleId;
 
     public Driver() {

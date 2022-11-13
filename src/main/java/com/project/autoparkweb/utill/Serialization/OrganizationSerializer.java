@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.project.autoparkweb.mvc.model.dao.Driver;
 import com.project.autoparkweb.mvc.model.dao.Organization;
 import com.project.autoparkweb.mvc.model.dao.Vehicle;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.lang.reflect.Type;
 
@@ -11,7 +12,8 @@ public class OrganizationSerializer implements JsonSerializer<Organization> {
     @Override
     public JsonElement serialize(Organization organization, Type type, JsonSerializationContext context) {
         JsonObject json = new JsonObject();
-
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        json.addProperty("username", username);
         json.addProperty("id", organization.getId());
         json.addProperty("name", organization.getName());
         json.addProperty("city", organization.getCity());

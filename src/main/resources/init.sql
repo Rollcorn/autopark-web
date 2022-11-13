@@ -3,9 +3,8 @@ DROP table IF EXISTS vehicle CASCADE;
 DROP table IF EXISTS car_brand CASCADE;
 DROP table IF EXISTS organization CASCADE;
 DROP table IF EXISTS "user" CASCADE;
-DROP table IF EXISTS manager CASCADE;
-DROP table IF EXISTS manager_organization_access CASCADE;
 DROP table IF EXISTS "role" CASCADE;
+DROP table IF EXISTS user_organization_access CASCADE;
 
 CREATE TABLE vehicle
 (
@@ -14,7 +13,7 @@ CREATE TABLE vehicle
     price           varchar(150) NOT NULL,
     release_date    varchar(150),
     mileage         int,
-    "owner"           varchar(200),
+    "owner"         varchar(200),
     driver_id       int,
     car_brand_id    int,
     organization_id int
@@ -48,15 +47,15 @@ VALUES (2, 'Honda Accord', 'coupes', 494, 'Regular unleaded', '5-speed manual', 
 
 CREATE TABLE organization
 (
-    id   int NOT NULL PRIMARY KEY,
+    id     int NOT NULL PRIMARY KEY,
     "name" varchar(150),
-    city varchar(150)
+    city   varchar(150)
 );
 
 CREATE TABLE driver
 (
     id              int          NOT NULL PRIMARY KEY,
-    "name"            varchar(150),
+    "name"          varchar(150),
     salary          varchar(150) NOT NULL,
     birthday        varchar(150),
     vehicle_id      int,
@@ -79,18 +78,10 @@ VALUES (2, 'Val Erasza Voda', 2300, '12.04.19991', 2, 2);
 
 CREATE TABLE "user"
 (
-    id       int NOT NULL PRIMARY KEY,
-    username varchar(150),
+    id         int NOT NULL PRIMARY KEY,
+    username   varchar(150),
     "password" varchar(150),
-    role_id  int
-);
-
-CREATE TABLE manager
-(
-    id       int NOT NULL PRIMARY KEY,
-    username varchar(150),
-    "password" varchar(150),
-    role_id  int
+    role_id    int
 );
 
 CREATE TABLE "role"
@@ -105,25 +96,24 @@ INSERT INTO "role" (id, role_name)
 VALUES (1, 'ADMIN');
 
 INSERT INTO "user" (id, username, "password", role_id)
-VALUES (0, 'maria', '1221', 0);
+VALUES (0, 'maria', '$2a$12$2qEC2Qlh9hi0pcsdAC4bMeUvX0/Q83ZsgNMe/DxDdWiUF.RILKKNm', 0);
 INSERT INTO "user" (id, username, "password", role_id)
-VALUES (1, 'alex', '1221', 0);
-INSERT INTO "manager" (id, username, "password", role_id)
-VALUES (0, 'rollcorn', '2012', 0);
-INSERT INTO "manager" (id, username, "password", role_id)
-VALUES (1, 'boris', '2012', 0);
+VALUES (1, 'alex', '$2a$12$2qEC2Qlh9hi0pcsdAC4bMeUvX0/Q83ZsgNMe/DxDdWiUF.RILKKNm', 0);
+INSERT INTO "user" (id, username, "password", role_id)
+VALUES (3, 'rollcorn', '$2a$12$2qEC2Qlh9hi0pcsdAC4bMeUvX0/Q83ZsgNMe/DxDdWiUF.RILKKNm', 1);
+INSERT INTO "user" (id, username, "password", role_id)
+VALUES (4, 'boris', '$2a$12$2qEC2Qlh9hi0pcsdAC4bMeUvX0/Q83ZsgNMe/DxDdWiUF.RILKKNm', 1);
 
-CREATE TABLE manager_organization_access
-
+CREATE TABLE user_organization_access
 (
     id              int NOT NULL PRIMARY KEY,
-    manager_id      int,
+    user_id         int,
     organization_id int
 );
 
-INSERT INTO manager_organization_access (id, manager_id, organization_id)
+INSERT INTO user_organization_access (id, user_id, organization_id)
 VALUES (0, 0, 0);
-INSERT INTO manager_organization_access (id, manager_id, organization_id)
+INSERT INTO user_organization_access (id, user_id, organization_id)
 VALUES (1, 0, 1);
-INSERT INTO manager_organization_access (id, manager_id, organization_id)
+INSERT INTO user_organization_access (id, user_id, organization_id)
 VALUES (2, 1, 2);

@@ -24,8 +24,8 @@ import javax.annotation.security.RolesAllowed;
 
 
 @PageTitle("Autopark")
-@RolesAllowed("USER")
-@Route(value = "", layout = MainView.class)
+@RolesAllowed("ADMIN")
+@Route(value = "/autopark", layout = MainView.class)
 public class AutoparkView extends VerticalLayout {
     private final VehicleService vehicleService;
     private final VehicleEditor vehicleEditor;

@@ -73,7 +73,7 @@ public class VehicleEditor extends VerticalLayout implements KeyNotifier  {
 
         save.addClickListener(e -> save());
         delete.addClickListener(e -> delete());
-        cancel.addClickListener(e -> editVehicle(vehicle));
+        cancel.addClickListener(e -> cancel());
         setVisible(false);
     }
 
@@ -104,5 +104,9 @@ public class VehicleEditor extends VerticalLayout implements KeyNotifier  {
         }
         vehicleRepository.save(vehicle);
         changeHandler.onChange();
+    }
+    
+    private void cancel() {
+        setVisible(false);
     }
 }

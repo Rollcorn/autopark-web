@@ -3,24 +3,24 @@ package com.project.autoparkweb.mvc.model.dao;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "manager_organization_access", schema = "public")
-public class ManagerOrganizationAccess {
+@Table(name = "user_organization_access", schema = "public")
+public class UserOrganizationAccess {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@OneToOne(cascade = CascadeType.ALL, targetEntity=Organization.class)
 	@JoinColumn(name = "organization_id", referencedColumnName = "id")
 	private Organization organizationId;
-	@OneToOne(cascade = CascadeType.ALL, targetEntity=Manager.class)
-	@JoinColumn(name = "manager_id", referencedColumnName = "id")
-	private Manager managerId;
+	@OneToOne(cascade = CascadeType.ALL, targetEntity=User.class)
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	private User userId;
 
-	public ManagerOrganizationAccess() {
+	public UserOrganizationAccess() {
 	}
 
-	public ManagerOrganizationAccess(Long id, Manager managerId, Organization organizationId) {
+	public UserOrganizationAccess(Long id, User userId, Organization organizationId) {
 		this.id = id;
-		this.managerId = managerId;
+		this.userId = userId;
 		this.organizationId = organizationId;
 	}
 
@@ -32,12 +32,12 @@ public class ManagerOrganizationAccess {
 		return id;
 	}
 
-	public Manager getManagerId() {
-		return managerId;
+	public User getUserId() {
+		return userId;
 	}
 
-	public void setManagerId(Manager managerId) {
-		this.managerId = managerId;
+	public void setUserId(User managerId) {
+		this.userId = managerId;
 	}
 
 	public Organization getOrganizationId() {
@@ -52,7 +52,7 @@ public class ManagerOrganizationAccess {
 	public String toString() {
 		return "ManagerOriganiizationAccess{" +
 				       "id=" + id +
-				       ", managerId=" + managerId +
+				       ", managerId=" + userId +
 				       ", organizationId=" + organizationId +
 				       '}';
 	}

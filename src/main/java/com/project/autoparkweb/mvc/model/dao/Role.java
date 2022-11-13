@@ -36,17 +36,6 @@ public class Role {
 	}
 	
 	@OneToOne(mappedBy = "roleId", optional = false)
-	private Manager manager;
-	
-	public Manager getManager() {
-		return manager;
-	}
-	
-	public void setManager(Manager manager) {
-		this.manager = manager;
-	}
-	
-	@OneToOne(mappedBy = "roleId", optional = false)
 	private User user;
 	
 	public User getUser() {

@@ -65,4 +65,15 @@ public class User {
 				       ", role='" + roleId + '\'' +
 				       '}';
 	}
+	
+	@OneToOne(mappedBy = "userId", optional = false)
+	private UserOrganizationAccess userOrganizationAccess;
+	
+	public UserOrganizationAccess getUserOrganizationAccess() {
+		return userOrganizationAccess;
+	}
+	
+	public void setUserOrganizationAccess(UserOrganizationAccess userOrganizationAccess) {
+		this.userOrganizationAccess = userOrganizationAccess;
+	}
 }

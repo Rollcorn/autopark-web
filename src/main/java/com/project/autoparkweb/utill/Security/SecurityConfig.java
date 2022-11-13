@@ -25,9 +25,12 @@ public class SecurityConfig extends VaadinWebSecurityConfigurerAdapter {
 	private static final String LOGIN_URL = "/login";
 	private static final String LOGOUT_SUCCESS_URL = "/vehicle";
 
-	@Autowired
-	private UserDetailsService userDetailsService;
-
+	private final UserDetailsService userDetailsService;
+	
+	public SecurityConfig(UserDetailsService userDetailsService) {
+		this.userDetailsService = userDetailsService;
+	}
+	
 	@Bean
 	AuthenticationProvider authenticationProvider(){
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
