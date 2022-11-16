@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.project.autoparkweb.mvc.model.dao.*;
 import com.project.autoparkweb.mvc.model.repository.*;
 import com.project.autoparkweb.mvc.model.services.VehicleService;
+import com.project.autoparkweb.utill.Security.UserDetailsImp;
 import com.project.autoparkweb.utill.Serialization.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
@@ -72,13 +73,20 @@ public class VehicleController {
 	public ResponseEntity<String> getOrganizations() {
 		try {
 			authentication = SecurityContextHolder.getContext().getAuthentication();
-			String managerId = authentication.getName();
-			List<Organization> organizations = managerOrganizationAccessRepository.getOrganizations(managerId);
-			Gson gson = new GsonBuilder()
-					            .setPrettyPrinting()
-					            .registerTypeAdapter(Organization.class, new OrganizationSerializer())
-					            .create();
-			return new ResponseEntity<>(gson.toJson(organizations), HttpStatus.OK);
+			UserDetailsImp v = (UserDetailsImp) SecurityContextHolder.getContext()
+			                                              .getAuthentication()
+			                                              .getPrincipal();
+			if (v.getUser() instanceof Manger) {
+				String managerId = authentication.getName();
+				List<Organization> organizations = managerOrganizationAccessRepository.getOrganizations(managerId);
+				Gson gson = new GsonBuilder()
+						            .setPrettyPrinting()
+						            .registerTypeAdapter(Organization.class, new OrganizationSerializer())
+						            .create();
+				return new ResponseEntity<>(gson.toJson(organizations), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(HttpStatus.FORBIDDEN.getReasonPhrase(), HttpStatus.FORBIDDEN);
+			}
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}

@@ -25,7 +25,7 @@ public class OrganizationSerializer implements JsonSerializer<Organization> {
                     .setPrettyPrinting()
                     .registerTypeAdapter(Vehicle.class, new VehicleSerializer())
                     .create();
-            vehicles.add(gson.toJsonTree(vehicle));
+            vehicles.add(gson.toJsonTree(vehicle.getId()));
         }
 
         JsonArray drivers = new JsonArray();
@@ -35,7 +35,7 @@ public class OrganizationSerializer implements JsonSerializer<Organization> {
                     .setPrettyPrinting()
                     .registerTypeAdapter(Driver.class, new DriverSerializer())
                     .create();
-            drivers.add(gson.toJsonTree(driver));
+            drivers.add(gson.toJsonTree(driver.getId()));
         }
         return json;
     }

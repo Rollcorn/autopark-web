@@ -3,8 +3,8 @@ package com.project.autoparkweb.mvc.model.dao;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "user", schema = "public")
-public class User {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	Long id;
@@ -66,7 +66,7 @@ public class User {
 				       '}';
 	}
 	
-	@OneToOne(mappedBy = "userId", optional = false)
+	@OneToOne(mappedBy = "managerId", optional = false)
 	private UserOrganizationAccess userOrganizationAccess;
 	
 	public UserOrganizationAccess getUserOrganizationAccess() {

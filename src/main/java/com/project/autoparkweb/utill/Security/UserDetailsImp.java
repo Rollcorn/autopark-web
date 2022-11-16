@@ -20,7 +20,11 @@ public class UserDetailsImp implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return Collections.singleton(new SimpleGrantedAuthority(user.getRole().getRoleName()));
 	}
-
+	
+	public User getUser() {
+		return user;
+	}
+	
 	@Override
 	public String getPassword() {
 		return user.getPassword();

@@ -11,12 +11,12 @@ public class ManagerOrganizationAccessSerializer implements JsonSerializer<UserO
 		JsonObject json = new JsonObject();
 		
 		json.addProperty("id", userOrganizationAccess.getId());
-		if (userOrganizationAccess.getUserId() != null) {
+		if (userOrganizationAccess.getManagerId() != null) {
 			Gson gson = new GsonBuilder()
 					            .setPrettyPrinting()
 					            .registerTypeAdapter(User.class, new UserSerializer())
 					            .create();
-			json.add("user", gson.toJsonTree(userOrganizationAccess.getUserId()));
+			json.add("user", gson.toJsonTree(userOrganizationAccess.getManagerId().getId()));
 		}
 		
 		if (userOrganizationAccess.getOrganizationId() != null) {
@@ -24,7 +24,7 @@ public class ManagerOrganizationAccessSerializer implements JsonSerializer<UserO
 					            .setPrettyPrinting()
 					            .registerTypeAdapter(Organization.class, new OrganizationSerializer())
 					            .create();
-			json.add("organization", gson.toJsonTree(userOrganizationAccess.getOrganizationId()));		}
+			json.add("organization", gson.toJsonTree(userOrganizationAccess.getOrganizationId().getId()));		}
 		return json;
 	}
 }

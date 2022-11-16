@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface ManagerOrganizationAccessRepository extends JpaRepository<UserOrganizationAccess, Long> {
-	@Query(value = "select o.organizationId from UserOrganizationAccess o where o.userId.username like :managerId")
+	@Query(value = "select o.organizationId from UserOrganizationAccess o where o.managerId.username like :managerId")
 	List<Organization> getOrganizations(@Param("managerId") String managerId);
 }
