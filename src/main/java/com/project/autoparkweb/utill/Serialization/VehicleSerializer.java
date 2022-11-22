@@ -11,20 +11,26 @@ import com.project.autoparkweb.mvc.model.dao.Vehicle;
 import java.lang.reflect.Type;
 
 public class VehicleSerializer implements JsonSerializer<Vehicle> {
-
-    @Override
-    public JsonElement serialize(Vehicle vehicle, Type type, JsonSerializationContext jsonSerializationContext) {
-        JsonObject json = new JsonObject();
-
-        json.addProperty("carId", vehicle.carId);
-        json.addProperty("released", vehicle.releaseDate);
-        json.addProperty("owner", vehicle.owner);
-        json.addProperty("brand", vehicle.getCarBrandId().getId());
-        json.addProperty("price", vehicle.price);
-        json.addProperty("mileage", vehicle.mileage);
-        json.addProperty("driver", vehicle.getDriverId().getId());
-        json.addProperty("organization", vehicle.getOrganizationId().getId());
-
-        return json;
-    }
+	
+	@Override
+	public JsonElement serialize(Vehicle vehicle, Type type, JsonSerializationContext jsonSerializationContext) {
+		JsonObject json = new JsonObject();
+		
+		json.addProperty("id", vehicle.getId());
+		json.addProperty("carId", vehicle.carId);
+		json.addProperty("released", vehicle.releaseDate);
+		json.addProperty("owner", vehicle.owner);
+		json.addProperty("price", vehicle.price);
+		json.addProperty("mileage", vehicle.mileage);
+		if (vehicle.getCarBrandId() != null) {
+			json.addProperty("brand", vehicle.getCarBrandId().getId());
+		}
+		if (vehicle.getDriverId() != null) {
+			json.addProperty("driver", vehicle.getDriverId().getId());
+		}
+		if (vehicle.getOrganizationId() != null) {
+			json.addProperty("organization", vehicle.getOrganizationId().getId());
+		}
+		return json;
+	}
 }

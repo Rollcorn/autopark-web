@@ -1,10 +1,11 @@
 package com.project.autoparkweb.mvc.model.dao;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-public class Vehicle {
+public class Vehicle implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long id;
@@ -13,16 +14,16 @@ public class Vehicle {
 	public String releaseDate;
 	public String carId;
 	public String owner;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinColumn(name = "car_brand_id", referencedColumnName = "id")
 	public CarBrand carBrandId;
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinColumn(name = "organization_id", referencedColumnName = "id")
 	private Organization organizationId;
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
 	@JoinColumn(name = "driver_id", referencedColumnName = "id")
 	private Driver driverId;
-	@OneToMany(targetEntity = Driver.class, cascade = CascadeType.ALL, mappedBy = "vehicleId", fetch = FetchType.EAGER)
+	@OneToMany(targetEntity = Driver.class, cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "vehicleId", fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Driver> drivers;
 	
 	public Vehicle() {

@@ -9,7 +9,7 @@ DROP table IF EXISTS manager_organization_access CASCADE;
 
 CREATE TABLE vehicle
 (
-    id              int          NOT NULL PRIMARY KEY,
+    id              int NOT NULL PRIMARY KEY,
     car_id          varchar(150),
     price           varchar(150) NOT NULL,
     release_date    varchar(150),

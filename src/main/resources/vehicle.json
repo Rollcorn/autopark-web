@@ -1,0 +1,11 @@
+'{
+  "carId": "X222XX",
+  "releaseDate": "10.12.2017",
+  "owner": "Ganry",
+  "carBrandId": 0,
+  "price": 340000,
+  "mileage": 6600,
+  "driverId": 2,
+  "organizationId": 1
+}'
+

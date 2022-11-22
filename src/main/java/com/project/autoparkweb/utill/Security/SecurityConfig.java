@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +25,7 @@ public class SecurityConfig extends VaadinWebSecurityConfigurerAdapter {
 	private static final String LOGIN_PROC_URL = "/login";
 	private static final String LOGIN_FAILURE_URL = "/login?error";
 	private static final String LOGIN_URL = "/login";
-	private static final String LOGOUT_SUCCESS_URL = "/vehicle";
+	private static final String LOGOUT_SUCCESS_URL = "/login";
 	
 	private final UserDetailsService userDetailsService;
 	
@@ -69,23 +70,33 @@ public class SecurityConfig extends VaadinWebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf()
-//				.disable()
-		    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-		    .and()
-		    .authorizeRequests()
-		    .antMatchers("/")
-		    .permitAll()
-		    .antMatchers("/autopark")
-		    .hasAuthority("USER")
-		    .antMatchers("/vehicles")
-		    .hasAuthority("ADMIN")
-		    .anyRequest()
-		    .authenticated()
-		    .and()
-		    .httpBasic();
+		http
+				.csrf()
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+				.and()
+				.requestCache()
+				.requestCache(new CustomRequestCache())
+				.and()
+				.authorizeRequests()
+				.requestMatchers(SecurityUtils::isFrameworkInternalRequest)
+				.permitAll()
+				.antMatchers("/")
+				.permitAll()
+				.antMatchers("/autopark", "/api")
+				.hasAnyRole("USER", "ADMIN")
+				.anyRequest()
+				.authenticated()
+				.and()
+//				.formLogin()
+//				.loginPage(LOGIN_URL).permitAll()
+//				.loginProcessingUrl(LOGIN_PROC_URL)
+//				.failureUrl(LOGIN_FAILURE_URL)
+//				.and()
+				.httpBasic()
+				.and()
+				.csrf().disable();
 	}
-
+	
 	@Override
 	public void configure(WebSecurity web) {
 		web.ignoring().antMatchers(

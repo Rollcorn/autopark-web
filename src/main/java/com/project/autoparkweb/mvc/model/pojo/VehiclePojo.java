@@ -11,7 +11,45 @@ public class VehiclePojo implements Serializable {
     public int mileage;
     public String carId;
     public String owner;
-    public CarBrand idCarBrand;
+    public Long idCarBrand;
+    public Long driverId;
+    
+    
+    public void setPrice(int price) {
+        this.price = price;
+    }
+    
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+    
+    public void setMileage(int mileage) {
+        this.mileage = mileage;
+    }
+    
+    public void setCarId(String carId) {
+        this.carId = carId;
+    }
+    
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+    
+    public Long getIdCarBrand() {
+        return idCarBrand;
+    }
+    
+    public void setIdCarBrand(Long idCarBrand) {
+        this.idCarBrand = idCarBrand;
+    }
+    
+    public Long getDriverId() {
+        return driverId;
+    }
+    
+    public void setDriverId(Long driverId) {
+        this.driverId = driverId;
+    }
 
     public VehiclePojo() {  }
 
@@ -35,7 +73,7 @@ public class VehiclePojo implements Serializable {
         return owner;
     }
 
-    public CarBrand getCarBrand() {
+    public Long getCarBrand() {
         return idCarBrand;
     }
 }

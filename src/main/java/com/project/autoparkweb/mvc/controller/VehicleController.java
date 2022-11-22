@@ -1,50 +1,113 @@
 package com.project.autoparkweb.mvc.controller;
 
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.project.autoparkweb.mvc.model.dao.*;
-import com.project.autoparkweb.mvc.model.repository.*;
+import com.project.autoparkweb.mvc.model.dao.CarBrand;
+import com.project.autoparkweb.mvc.model.dao.Vehicle;
+import com.project.autoparkweb.mvc.model.pojo.VehiclePojo;
+import com.project.autoparkweb.mvc.model.repository.CarBrandRepository;
+import com.project.autoparkweb.mvc.model.repository.DriverRepository;
+import com.project.autoparkweb.mvc.model.repository.ManagerOrganizationAccessRepository;
+import com.project.autoparkweb.mvc.model.repository.UserRepository;
+import com.project.autoparkweb.mvc.model.services.UserAccessException;
 import com.project.autoparkweb.mvc.model.services.VehicleService;
-import com.project.autoparkweb.utill.Security.UserDetailsImp;
-import com.project.autoparkweb.utill.Serialization.*;
+import com.project.autoparkweb.utill.Serialization.SerializerUtill;
+import com.project.autoparkweb.utill.Serialization.VehicleSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/autopark/rest")
+@CrossOrigin
+@RequestMapping(value = "/api")
 public class VehicleController {
 	private final VehicleService vehicleService;
-	private final DriverRepository driverRepository;
-	private final ManagerOrganizationAccessRepository managerOrganizationAccessRepository;
-	private final UserRepository userRepository;
-	Authentication authentication;
+	final CarBrandRepository carBrandRepository;
+	final DriverRepository driverRepository;
 	
 	@Autowired
-	public VehicleController(VehicleService vehicleService,
-	                         DriverRepository driverRepository,
-	                         ManagerOrganizationAccessRepository managerOrganizationAccessRepository,
-	                         UserRepository userRepository) {
+	public VehicleController(VehicleService vehicleService, CarBrandRepository carBrandRepository, DriverRepository driverRepository) {
 		this.vehicleService = vehicleService;
+		this.carBrandRepository = carBrandRepository;
 		this.driverRepository = driverRepository;
-		this.managerOrganizationAccessRepository = managerOrganizationAccessRepository;
-		this.userRepository = userRepository;
 	}
 	
-	@GetMapping(value = "/vehicles")
-	public ResponseEntity<String> getVehicles() {
+	@PostMapping(value = "/create", consumes = "application/json")
+	public ResponseEntity<String> createVehicles(@RequestBody VehiclePojo vehicle) {
 		try {
-			List<Vehicle> unit = vehicleService.getAllVehicles();
+			Vehicle create = new Vehicle();
+			create.price = vehicle.price;
+			create.mileage = vehicle.mileage;
+			if (vehicle.getCarBrand() != null) {
+				create.carBrandId = carBrandRepository.findById(vehicle.idCarBrand).get();
+			}
+			if (vehicle.carId != null) {
+				create.carId = vehicle.carId;
+			}
+			if (vehicle.owner != null) {
+				create.owner = vehicle.owner;
+			}
+			if (vehicle.getDriverId() != null) {
+				create.setDriverId(driverRepository.findById(vehicle.getDriverId()).get());
+			}
+			if (vehicle.releaseDate != null) {
+				create.releaseDate = vehicle.releaseDate;
+			}
+			vehicleService.createVehicle(create);
+			return new ResponseEntity<>(new SerializerUtill().serializeVehicle(create), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		} catch (UserAccessException e) {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		}
+	}
+	
+	@GetMapping(value = "/get/{id}", produces = "application/json")
+	public ResponseEntity<String> getVehicle(@PathVariable Long id) {
+		try {
+			Optional<Vehicle> unit = vehicleService.getVehicleById(id);
+			Gson gson = new GsonBuilder()
+					            .setPrettyPrinting()
+					            .registerTypeAdapter(Vehicle.class, new VehicleSerializer())
+					            .create();
+			
+			return new ResponseEntity<>(gson.toJson(unit.get()), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		} catch (UserAccessException e) {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		}
+	}
+	
+	@PostMapping(value = "/update/{id}")
+	public ResponseEntity<String> updateVehicles(@PathVariable Long id, @RequestBody VehiclePojo vehicle) {
+		try {
+			Optional<Vehicle> unit = vehicleService.getVehicleById(id);
+			if (unit.isPresent()) {
+				Vehicle origin = unit.get();
+				origin.price = vehicle.price;
+				origin.mileage = vehicle.mileage;
+				if (vehicle.getCarBrand() != null) {
+					origin.carBrandId = carBrandRepository.findById(vehicle.idCarBrand).get();
+				}
+				if (vehicle.carId != null) {
+					origin.carId = vehicle.carId;
+				}
+				if (vehicle.owner != null) {
+					origin.owner = vehicle.owner;
+				}
+				if (vehicle.getDriverId() != null) {
+					origin.setDriverId(driverRepository.findById(vehicle.getDriverId()).get());
+				}
+				if (vehicle.releaseDate != null) {
+					origin.releaseDate = vehicle.releaseDate;
+				}
+				vehicleService.createVehicle(origin);
+			}
 			Gson gson = new GsonBuilder()
 					            .setPrettyPrinting()
 					            .registerTypeAdapter(Vehicle.class, new VehicleSerializer())
@@ -52,82 +115,20 @@ public class VehicleController {
 			return new ResponseEntity<>(gson.toJson(unit), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		} catch (UserAccessException e) {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		}
 	}
 	
-	@GetMapping(value = "/drivers")
-	public ResponseEntity<String> getDrivers() {
+	@DeleteMapping(value = "/delete/{id}")
+	public ResponseEntity<String> deleteVehicles(@PathVariable Long id) {
 		try {
-			List<Driver> unit = driverRepository.findAll();
-			Gson gson = new GsonBuilder()
-					            .setPrettyPrinting()
-					            .registerTypeAdapter(Driver.class, new DriverSerializer())
-					            .create();
-			return new ResponseEntity<>(gson.toJson(unit), HttpStatus.OK);
+			vehicleService.deleteVehicleById(id);
+			return new ResponseEntity<>(null, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@GetMapping(value = "/organizations")
-	public ResponseEntity<String> getOrganizations() {
-		try {
-			authentication = SecurityContextHolder.getContext().getAuthentication();
-			UserDetailsImp v = (UserDetailsImp) SecurityContextHolder.getContext()
-			                                              .getAuthentication()
-			                                              .getPrincipal();
-			if (v.getUser() instanceof Manger) {
-				String managerId = authentication.getName();
-				List<Organization> organizations = managerOrganizationAccessRepository.getOrganizations(managerId);
-				Gson gson = new GsonBuilder()
-						            .setPrettyPrinting()
-						            .registerTypeAdapter(Organization.class, new OrganizationSerializer())
-						            .create();
-				return new ResponseEntity<>(gson.toJson(organizations), HttpStatus.OK);
-			} else {
-				return new ResponseEntity<>(HttpStatus.FORBIDDEN.getReasonPhrase(), HttpStatus.FORBIDDEN);
-			}
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@GetMapping(value = "/users")
-	public ResponseEntity<String> getUsers() {
-		try {
-			List<User> unit = userRepository.findAll();
-			Gson gson = new GsonBuilder()
-					            .setPrettyPrinting()
-					            .registerTypeAdapter(User.class, new UserSerializer())
-					            .create();
-			return new ResponseEntity<>(gson.toJson(unit), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@GetMapping(value = "/managersorganization")
-	public ResponseEntity<String> getManagersOrganization() {
-		try {
-			List<UserOrganizationAccess> unit = managerOrganizationAccessRepository.findAll();
-			Gson gson = new GsonBuilder()
-					            .setPrettyPrinting()
-					            .registerTypeAdapter(UserOrganizationAccess.class, new ManagerOrganizationAccessSerializer())
-					            .create();
-			return new ResponseEntity<>(gson.toJson(unit), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-		}
-	}
-	
-	@GetMapping(value = "/user/{name}")
-	public ResponseEntity<String> getManagersOrganization(@PathVariable(name = "name") String name) {
-		try {
-			User unit = userRepository.findByName(name);
-			
-			return new ResponseEntity<>(unit.toString(), HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		} catch (UserAccessException e) {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		}
 	}
 }
