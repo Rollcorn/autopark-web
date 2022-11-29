@@ -25,20 +25,20 @@ public class Vehicle implements Serializable {
 	private Driver driverId;
 	@OneToMany(targetEntity = Driver.class, cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "vehicleId", fetch = FetchType.EAGER, orphanRemoval = true)
 	private List<Driver> drivers;
-	
 	public Vehicle() {
 	}
 	
-	public Vehicle(int price, String releaseDate, int mileage, String carId, String owner, CarBrand carBrand,
-	               Organization organizationId) {
+	public Vehicle(int price, int mileage, String releaseDate, String carId, String owner, CarBrand carBrandId, Organization organizationId, Driver driverId) {
 		this.price = price;
-		this.releaseDate = releaseDate;
 		this.mileage = mileage;
+		this.releaseDate = releaseDate;
 		this.carId = carId;
 		this.owner = owner;
-		this.carBrandId = carBrand;
+		this.carBrandId = carBrandId;
 		this.organizationId = organizationId;
+		this.driverId = driverId;
 	}
+	
 	
 	public Long getId() {
 		return id;

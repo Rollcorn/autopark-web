@@ -2,24 +2,27 @@ package com.project.autoparkweb.mvc.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.project.autoparkweb.mvc.model.dao.CarBrand;
 import com.project.autoparkweb.mvc.model.dao.Vehicle;
 import com.project.autoparkweb.mvc.model.pojo.VehiclePojo;
 import com.project.autoparkweb.mvc.model.repository.CarBrandRepository;
 import com.project.autoparkweb.mvc.model.repository.DriverRepository;
-import com.project.autoparkweb.mvc.model.repository.ManagerOrganizationAccessRepository;
-import com.project.autoparkweb.mvc.model.repository.UserRepository;
+import com.project.autoparkweb.mvc.model.services.OrganizationService;
 import com.project.autoparkweb.mvc.model.services.UserAccessException;
 import com.project.autoparkweb.mvc.model.services.VehicleService;
 import com.project.autoparkweb.utill.Serialization.SerializerUtill;
 import com.project.autoparkweb.utill.Serialization.VehicleSerializer;
+import com.project.autoparkweb.utill.VehicleUtils;
+import com.vaadin.flow.router.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -28,6 +31,10 @@ public class VehicleController {
 	private final VehicleService vehicleService;
 	final CarBrandRepository carBrandRepository;
 	final DriverRepository driverRepository;
+	@Autowired
+	VehicleUtils vehicleUtils;
+	@Autowired
+	OrganizationService organizationService;
 	
 	@Autowired
 	public VehicleController(VehicleService vehicleService, CarBrandRepository carBrandRepository, DriverRepository driverRepository) {
@@ -130,5 +137,49 @@ public class VehicleController {
 		} catch (UserAccessException e) {
 			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		}
+	}
+	
+	@GetMapping(value = "/random/{count}", produces = "application/json")
+	public ResponseEntity<String> getRandomVehicle(@PathVariable int count) {
+		try {
+			List<Vehicle> unit = vehicleUtils.createVehiclesForOrganizations(organizationService.getAll(), count);
+			for (Vehicle v : unit) {
+				vehicleService.createVehicle(v);
+			}
+			Gson gson = new GsonBuilder()
+					            .setPrettyPrinting()
+					            .registerTypeAdapter(Vehicle.class, new VehicleSerializer())
+					            .create();
+			
+			return new ResponseEntity<>(gson.toJson(unit), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		} catch (UserAccessException e) {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		}
+	}
+	
+	
+	@GetMapping(value = "/page/{num}", produces = "application/json")
+	public ResponseEntity<String> getVehicleByPage(@PathVariable int num) {
+		try {
+			Page<Vehicle> unit = vehicleService.getByPage(num);
+			if (unit.getTotalPages() < num) {
+				throw new NotFoundException("Page not exist");
+			}
+			List<Vehicle> vehicles = unit.get().collect(Collectors.toList());
+			Gson gson = new GsonBuilder()
+					            .setPrettyPrinting()
+					            .registerTypeAdapter(Vehicle.class, new VehicleSerializer())
+					            .create();
+			
+			return new ResponseEntity<>(gson.toJson(vehicles), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		} catch (UserAccessException e) {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		}
+
+		
 	}
 }

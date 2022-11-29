@@ -9,6 +9,9 @@ import com.project.autoparkweb.mvc.model.repository.VehicleRepository;
 import com.project.autoparkweb.utill.Security.UserDetailsImp;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -35,8 +38,7 @@ public class VehicleService {
 	}
 	
 	public List<CarBrand> getAllBrands() {
-		List<CarBrand> car = carBrandRepository.findAll();
-		return car;
+		return carBrandRepository.findAll();
 	}
 	
 	public List<Vehicle> getVehicleByName(String name) {
@@ -44,10 +46,8 @@ public class VehicleService {
 	}
 	
 	public void createVehicle(Vehicle vehicle) throws UserAccessException {
-//        if (userDetailsImp == null) {
 		authentication = SecurityContextHolder.getContext().getAuthentication();
 		userDetailsImp = (UserDetailsImp) authentication.getPrincipal();
-//        }
 		if (userDetailsImp.getUser() instanceof Manger) {
 			vehicleRepository.save(vehicle);
 			return;
@@ -88,6 +88,18 @@ public class VehicleService {
 		}
 		if (userDetailsImp.getUser() instanceof Manger) {
 			vehicleRepository.findById(id);
+		} else {
+			throw new UserAccessException();
+		}
+	}
+	
+	public Page<Vehicle> getByPage(int num) throws UserAccessException {
+		if (userDetailsImp == null) {
+			authentication = SecurityContextHolder.getContext().getAuthentication();
+			userDetailsImp = (UserDetailsImp) authentication.getPrincipal();
+		}
+		if (userDetailsImp.getUser() instanceof Manger) {
+			return vehicleRepository.findAll(PageRequest.of(num, 10, Sort.by(Sort.Direction.ASC, "id")));
 		} else {
 			throw new UserAccessException();
 		}

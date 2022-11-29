@@ -15,4 +15,8 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     @Query("from Vehicle e left join fetch e.carBrandId where e.carBrandId.carBrandName like concat( '%', :name, '%')")
     List<Vehicle> findByName(@Param("name") String name);
+
+//    @Query("from Vehicle v where (v.created_at < :created_at and v.id < :id) " +
+//                   "order by v.created_at DESC, v.id DESC ")
+//    List<Vehicle> getVehicleByPage(@Param("page") String create_at, @Param("id") Long id);
 }
