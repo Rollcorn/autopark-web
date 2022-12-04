@@ -3,6 +3,7 @@ package com.project.autoparkweb.views.main;
 import com.project.autoparkweb.mvc.model.dao.CarBrand;
 import com.project.autoparkweb.mvc.model.dao.Vehicle;
 import com.project.autoparkweb.mvc.model.pojo.VehiclePojo;
+import com.project.autoparkweb.mvc.model.services.UserAccessException;
 import com.project.autoparkweb.mvc.model.services.VehicleService;
 //import com.project.autoparkweb.views.MainLayout;
 import com.project.autoparkweb.views.MainView;
@@ -21,10 +22,11 @@ import org.springframework.context.annotation.Role;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @PageTitle("Autopark")
-@RolesAllowed("ADMIN")
 @Route(value = "/autopark", layout = MainView.class)
 public class AutoparkView extends VerticalLayout {
     private final VehicleService vehicleService;
@@ -44,7 +46,7 @@ public class AutoparkView extends VerticalLayout {
         add("AUTOPARKS VEHICLES");
         add(toolBar, vehicleGrid, this.vehicleEditor);
         
-        filter.setValueChangeMode(ValueChangeMode.EAGER);
+        filter.setValueChangeMode(ValueChangeMode.LAZY);
         filter.addValueChangeListener(event -> showVehicles(event.getValue()));
         
         vehicleGrid.asSingleSelect().addValueChangeListener(event -> {
@@ -64,9 +66,14 @@ public class AutoparkView extends VerticalLayout {
         brandGrid.setItems(vehicleService.getAllBrands());
     }
     
-    private void showVehicles(String name) {
+    private void showVehicles(String name){
         if (name == null || name.isEmpty()) {
-            vehicleGrid.setItems(vehicleService.getAllVehicles());
+            try {
+                List<Vehicle> vehicles = new ArrayList<>(vehicleService.getByPage(1, 20));
+                vehicleGrid.setItems(vehicles);
+            } catch (UserAccessException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             vehicleGrid.setItems(vehicleService.getVehicleByName(name));
         }

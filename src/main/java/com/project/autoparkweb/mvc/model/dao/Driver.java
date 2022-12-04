@@ -7,13 +7,12 @@ public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long id;
-
     public String name;
     public String salary;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Organization.class, optional = false)
     @JoinColumn(name = "organization_id", referencedColumnName = "id")
     public Organization organizationId;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Vehicle.class, optional = false)
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
     public Vehicle vehicleId;
 

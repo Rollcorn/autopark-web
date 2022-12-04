@@ -17,7 +17,8 @@ CREATE TABLE vehicle
     "owner"         varchar(200),
     driver_id       int,
     car_brand_id    int,
-    organization_id int
+    organization_id int,
+    created_at       timestamp NOT NULL DEFAULT (now() at time zone 'utc')
 );
 
 insert INTO vehicle (id, car_id, car_brand_id, price, release_date, mileage, owner, driver_id, organization_id)

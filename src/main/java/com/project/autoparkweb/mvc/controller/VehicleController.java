@@ -6,6 +6,7 @@ import com.project.autoparkweb.mvc.model.dao.Vehicle;
 import com.project.autoparkweb.mvc.model.pojo.VehiclePojo;
 import com.project.autoparkweb.mvc.model.repository.CarBrandRepository;
 import com.project.autoparkweb.mvc.model.repository.DriverRepository;
+import com.project.autoparkweb.mvc.model.repository.VehiclePageRepositoryImpl;
 import com.project.autoparkweb.mvc.model.services.OrganizationService;
 import com.project.autoparkweb.mvc.model.services.UserAccessException;
 import com.project.autoparkweb.mvc.model.services.VehicleService;
@@ -14,15 +15,13 @@ import com.project.autoparkweb.utill.Serialization.VehicleSerializer;
 import com.project.autoparkweb.utill.VehicleUtils;
 import com.vaadin.flow.router.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -85,7 +84,8 @@ public class VehicleController {
 			return new ResponseEntity<>(gson.toJson(unit.get()), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-		} catch (UserAccessException e) {
+		}
+		catch (UserAccessException e) {
 			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		}
 	}
@@ -160,14 +160,15 @@ public class VehicleController {
 	}
 	
 	
-	@GetMapping(value = "/page/{num}", produces = "application/json")
-	public ResponseEntity<String> getVehicleByPage(@PathVariable int num) {
+	@GetMapping(value = "/fromTime")
+	public ResponseEntity<String> getVehicleByPage(@RequestParam Timestamp createdAt,
+	                                               @RequestParam int limit) {
 		try {
-			Page<Vehicle> unit = vehicleService.getByPage(num);
-			if (unit.getTotalPages() < num) {
+			List<Vehicle> vehicles = vehicleService.getByTimestamp(createdAt, limit);
+			if (vehicles.isEmpty()) {
 				throw new NotFoundException("Page not exist");
 			}
-			List<Vehicle> vehicles = unit.get().collect(Collectors.toList());
+//			List<Vehicle> vehicles = unit.get().collect(Collectors.toList());
 			Gson gson = new GsonBuilder()
 					            .setPrettyPrinting()
 					            .registerTypeAdapter(Vehicle.class, new VehicleSerializer())
@@ -176,10 +177,30 @@ public class VehicleController {
 			return new ResponseEntity<>(gson.toJson(vehicles), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-		} catch (UserAccessException e) {
+		}
+		catch (UserAccessException e) {
 			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		}
-
-		
+	}
+	
+	@GetMapping(value = "/page")
+	public ResponseEntity<String> getVehicleByTimestamp(@RequestParam int page, @RequestParam int limit) {
+		try {
+				List<Vehicle> vehicles = vehicleService.getByPage(page, limit);
+			if (vehicles.isEmpty()) {
+				throw new NotFoundException("Page not exist");
+			}
+			Gson gson = new GsonBuilder()
+					            .setPrettyPrinting()
+					            .registerTypeAdapter(Vehicle.class, new VehicleSerializer())
+					            .create();
+			
+			return new ResponseEntity<>(gson.toJson(vehicles), HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+		catch (UserAccessException e) {
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		}
 	}
 }

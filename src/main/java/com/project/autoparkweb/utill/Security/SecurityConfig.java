@@ -1,5 +1,6 @@
 package com.project.autoparkweb.utill.Security;
 
+import com.project.autoparkweb.views.LoginView;
 import com.vaadin.flow.spring.security.VaadinWebSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -80,18 +81,21 @@ public class SecurityConfig extends VaadinWebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.requestMatchers(SecurityUtils::isFrameworkInternalRequest)
 				.permitAll()
-				.antMatchers("/")
+				.antMatchers("/", "/login")
 				.permitAll()
 				.antMatchers("/autopark", "/api")
-				.hasAnyRole("USER", "ADMIN")
+				.hasAuthority("USER")
 				.anyRequest()
 				.authenticated()
 				.and()
-//				.formLogin()
-//				.loginPage(LOGIN_URL).permitAll()
-//				.loginProcessingUrl(LOGIN_PROC_URL)
-//				.failureUrl(LOGIN_FAILURE_URL)
-//				.and()
+				.formLogin()
+				.loginPage(LOGIN_URL)
+				.loginProcessingUrl(LOGIN_PROC_URL)
+				.failureUrl(LOGIN_FAILURE_URL)
+				.and()
+				.logout()
+				.logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+				.and()
 				.httpBasic()
 				.and()
 				.csrf().disable();

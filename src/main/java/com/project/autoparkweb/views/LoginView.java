@@ -15,7 +15,7 @@ import java.util.Collections;
 @PageTitle("Login")
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 	// TODO Might be replaced by custom login form
-	private LoginForm loginForm = new LoginForm();
+	private final LoginForm loginForm = new LoginForm();
 	
 	public LoginView() {
 		addClassName("login-view");

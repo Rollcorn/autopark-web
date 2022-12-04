@@ -1,7 +1,10 @@
 package com.project.autoparkweb.mvc.model.dao;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Entity
@@ -14,21 +17,27 @@ public class Vehicle implements Serializable {
 	public String releaseDate;
 	public String carId;
 	public String owner;
-	@ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+	
+	@CreationTimestamp
+	public Timestamp createdAt;
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = CarBrand.class)
 	@JoinColumn(name = "car_brand_id", referencedColumnName = "id")
 	public CarBrand carBrandId;
-	@ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "organization_id", referencedColumnName = "id")
 	private Organization organizationId;
-	@OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JoinColumn(name = "driver_id", referencedColumnName = "id")
 	private Driver driverId;
-	@OneToMany(targetEntity = Driver.class, cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST}, mappedBy = "vehicleId", fetch = FetchType.EAGER, orphanRemoval = true)
+	@OneToMany(targetEntity = Driver.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "vehicleId",
+			orphanRemoval = true)
 	private List<Driver> drivers;
+	
 	public Vehicle() {
 	}
 	
-	public Vehicle(int price, int mileage, String releaseDate, String carId, String owner, CarBrand carBrandId, Organization organizationId, Driver driverId) {
+	public Vehicle(int price, int mileage, String releaseDate, String carId, String owner, CarBrand carBrandId,
+	               Organization organizationId, Driver driverId, Timestamp createdAt) {
 		this.price = price;
 		this.mileage = mileage;
 		this.releaseDate = releaseDate;
@@ -37,6 +46,7 @@ public class Vehicle implements Serializable {
 		this.carBrandId = carBrandId;
 		this.organizationId = organizationId;
 		this.driverId = driverId;
+		this.createdAt = createdAt;
 	}
 	
 	
@@ -118,6 +128,14 @@ public class Vehicle implements Serializable {
 	
 	public void setDrivers(List<Driver> drivers) {
 		this.drivers = drivers;
+	}
+	
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
+	
+	public void setCreatedAt(Timestamp dateCreated) {
+		this.createdAt = dateCreated;
 	}
 	
 	@Override

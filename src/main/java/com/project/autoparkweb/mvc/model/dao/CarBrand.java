@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Entity
+@Table(name = "car_brand")
 public class CarBrand implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,8 +22,9 @@ public class CarBrand implements Serializable {
     public CarBrand() {
     }
 
-    public CarBrand(String carBrandName, String bodyType, int loadCapacity, String fuelType, String transmissionType,
+    public CarBrand(Long id, String carBrandName, String bodyType, int loadCapacity, String fuelType, String transmissionType,
                     String drivetrainType) {
+        this.id = id;
         this.carBrandName = carBrandName;
         this.bodyType = bodyType;
         this.loadCapacity = loadCapacity;
@@ -30,11 +32,15 @@ public class CarBrand implements Serializable {
         this.transmissionType = transmissionType;
         this.drivetrainType = drivetrainType;
     }
-
+    
     public Long getId() {
         return id;
     }
-
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     public String getCarBrandName() {
         return carBrandName;
     }

@@ -22,6 +22,7 @@ public class VehicleSerializer implements JsonSerializer<Vehicle> {
 		json.addProperty("owner", vehicle.owner);
 		json.addProperty("price", vehicle.price);
 		json.addProperty("mileage", vehicle.mileage);
+		json.addProperty("createdAt", vehicle.createdAt.toString());
 		if (vehicle.getCarBrandId() != null) {
 			json.addProperty("brand", vehicle.getCarBrandId().getId());
 		}
